@@ -1,0 +1,7 @@
+1. Get the application URL by running these commands:
+{{- if contains "LoadBalancer" .Values.service.type }}
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        You can watch the status of by running 'kubectl get svc -w {{ include "guestbook.fullname" . }} --namespace {{ .Release.Namespace }}'
+  export SERVICE_HOST=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "guestbook.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+  echo http://$SERVICE_HOST:{{ .Values.service.port }}
+{{- end }}

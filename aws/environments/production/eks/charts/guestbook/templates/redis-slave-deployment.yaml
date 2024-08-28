@@ -1,0 +1,34 @@
+{{- if .Values.redis.slaveEnabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-slave
+  labels:
+    app: redis
+    role: slave
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis
+      role: slave
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: slave
+    spec:
+      containers:
+      - name: redis-slave
+        image: 152254703525.dkr.ecr.eu-west-1.amazonaws.com/nemesis:redis-slave #gcr.io/google_samples/gb-redisslave:v1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          env:
+            - name: GET_HOSTS_FROM
+              value: dns
+        ports:
+        - name: redis-server
+          containerPort: {{ .Values.redis.port }}
+{{- end }}
